@@ -1,4 +1,4 @@
-package taxes
+package main
 
 import (
 	"testing"
@@ -6,24 +6,24 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Test_calculateSalaryTaxes(t *testing.T) {
+func Test_calculateSalary(t *testing.T) {
 	t.Run("1", func(t *testing.T) {
-		expected := 0.00
-		result := calculateSalaryTaxes(40000.00)
+		expected := 9000.0
+		result := calculateSalary(120, "A")
 
 		require.Equal(t, expected, result)
 	})
 
 	t.Run("2", func(t *testing.T) {
-		expected := 60000.00 * 0.17
-		result := calculateSalaryTaxes(60000.00)
+		expected := 5400.0
+		result := calculateSalary(180, "B")
 
 		require.Equal(t, expected, result)
 	})
 
 	t.Run("3", func(t *testing.T) {
-		expected := 160000.00 * 0.27
-		result := calculateSalaryTaxes(160000.00)
+		expected := 2000.0
+		result := calculateSalary(120, "C")
 
 		require.Equal(t, expected, result)
 	})

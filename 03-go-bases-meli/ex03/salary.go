@@ -1,4 +1,4 @@
-package salary
+package main
 
 import "fmt"
 

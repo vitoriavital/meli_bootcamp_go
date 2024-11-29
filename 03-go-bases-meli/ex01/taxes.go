@@ -1,4 +1,4 @@
-package taxes
+package main
 
 import "fmt"
 

@@ -1,4 +1,4 @@
-package average
+package main
 
 import (
 	"testing"
