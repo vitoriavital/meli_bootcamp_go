@@ -22,6 +22,15 @@ func checkCreation(file string) {
 	fmt.Println(lines)
 }
 
+func checkValues(user Data) (string, error) {
+	if user.File == "" || user.Name == "" || user.ID == "" || user.PhoneNumber == "" || user.Adress == "" {
+		return "", errors.New("Error: Empty field detected")
+	}
+	content := fmt.Sprintf("%s,%s,%s,%s,%s\n", user.File, user.Name, user.ID, user.PhoneNumber, user.Adress)
+
+	return content, nil
+}
+
 func readDetails(lines []byte) []Data {
 	content := string(lines)
 	allLines := strings.Split(content, "\n")
@@ -49,11 +58,14 @@ func saveDetails(newUser Data, allUsers []Data) error {
 			return errors.New("Error: client already exists")
 		}
 	}
-	addUser := fmt.Sprintf("%s,%s,%s,%s,%s\n", newUser.File, newUser.Name, newUser.ID, newUser.PhoneNumber, newUser.Adress)
-	var err error
+
+	userContent, err := checkValues(newUser)
+	if err != nil {
+		return err
+	}
 	file,_ := os.OpenFile(newUser.File,  os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
 	defer file.Close()
-	_, err = file.Write([]byte(addUser))
+	_, err = file.Write([]byte(userContent))
 	if err != nil {
 		return err
 	}
@@ -71,13 +83,13 @@ func endOfProgram() {
 
 func askDetails(newUser *Data) {
 	fmt.Print("Type a name: ")
-	fmt.Scan(&newUser.Name)
+	fmt.Scanln(&newUser.Name)
 	fmt.Print("Type a ID: ")
-	fmt.Scan(&newUser.ID)
+	fmt.Scanln(&newUser.ID)
 	fmt.Print("Type a phone number: ")
-	fmt.Scan(&newUser.PhoneNumber)
+	fmt.Scanln(&newUser.PhoneNumber)
 	fmt.Print("Type a adress: ")
-	fmt.Scan(&newUser.Adress)
+	fmt.Scanln(&newUser.Adress)
 }
 
 func main() {
@@ -85,7 +97,7 @@ func main() {
 	defer endOfProgram()
 
 	fmt.Print("Type a file: ")
-	fmt.Scan(&newUser.File)
+	fmt.Scanln(&newUser.File)
 	
 	file, err :=os.ReadFile(newUser.File)
 	if err != nil {
@@ -94,8 +106,9 @@ func main() {
 	
 	askDetails(&newUser)
 	currentCustomers := readDetails(file)
-	if saveDetails(newUser, currentCustomers) != nil {
-		panic("Error: client already exists")
+	err = saveDetails(newUser, currentCustomers)
+	if err != nil {
+		panic(err)
 	}
 	checkCreation(newUser.File)
 }
