@@ -1,0 +1,6 @@
+File,Name,ID,PhoneNumber,Adress
+customer.txt,John,1,81996228747,Av.Paulista
+customer.txt,Sophie,2,11986228747,Av.Corifeu
+customers.txt,vi,10,48374938,MacArthur
+customers.txt,John,1,81996228747,Av.
+customers.txt,ok,ok,ok,avenida
