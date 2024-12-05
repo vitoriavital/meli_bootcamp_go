@@ -79,6 +79,11 @@ func HandlerProductSearch(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	price := r.URL.Query().Get("priceGt")
+	if price == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Error: Missing priceGt"))
+		return
+	}
 	priceGt, err := strconv.ParseFloat(price, 64)
 	if err != nil {
 		fmt.Println(err)
