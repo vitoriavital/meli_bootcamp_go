@@ -21,6 +21,6 @@ type RequestBodyProduct struct {
 
 type ResponseBodyProduct struct {
 	Message		string			`json:"message"`
-	Product	*Product 	`json:"product,omitempty"`
+	Product	*Product 			`json:"product,omitempty"`
 	Error		bool			`json:"error"`
 }

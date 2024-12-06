@@ -7,7 +7,7 @@ import (
 )
 
 func LoadProducts() ([]model.Product, error) {
-	file, err := os.Open("/Users/mlvital/Desktop/bootcamp/meli_bootcamp_go/11-go-web-post-method-meli/go-web/products.json")
+	file, err := os.Open("docs/db/products.json")
     if err != nil {
         return nil, err
     }
@@ -20,12 +20,11 @@ func LoadProducts() ([]model.Product, error) {
 }
 
 func SaveProducts(allProducts []model.Product) error {
-	file, err := os.OpenFile("/Users/mlvital/Desktop/bootcamp/meli_bootcamp_go/11-go-web-post-method-meli/go-web/products.json", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+	file, err := os.OpenFile("docs/db/products.json", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
     if err != nil {
         return err
     }
     defer file.Close()
-
     err = json.NewEncoder(file).Encode(allProducts)
 	if err != nil {
 		return err

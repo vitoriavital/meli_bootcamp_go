@@ -14,8 +14,7 @@ func NewProductService(filePath string) *ProductService {
 	return &ProductService{FilePath: filePath}
 }
 
-
-func (s *ProductService) GetAllProducts() ([]model.Product, error){
+func (s *ProductService) GetAllProducts() ([]model.Product, error) {
 	products, err := repository.LoadProducts()
 	if err != nil {
 		return nil, err
@@ -23,7 +22,7 @@ func (s *ProductService) GetAllProducts() ([]model.Product, error){
 	return products, nil
 }
 
-func (s *ProductService) GetProductById(id int) (*model.Product, error){
+func (s *ProductService) GetProductById(id int) (*model.Product, error) {
 	products, err := repository.LoadProducts()
 	if err != nil {
 		return nil, err
@@ -37,8 +36,7 @@ func (s *ProductService) GetProductById(id int) (*model.Product, error){
 	return &product, nil
 }
 
-
-func (s *ProductService) GetProductsByPrice(priceGt float64) ([]model.Product, error){
+func (s *ProductService) GetProductsByPrice(priceGt float64) ([]model.Product, error) {
 	allProducts, err := repository.LoadProducts()
 	if err != nil {
 		return nil, err
@@ -46,13 +44,13 @@ func (s *ProductService) GetProductsByPrice(priceGt float64) ([]model.Product, e
 	var products []model.Product
 	for _, product := range allProducts {
 		if product.Price >= priceGt {
-			allProducts = append(allProducts, product)
+			products = append(products, product)
 		}
 	}
 	return products, nil
 }
 
-func (s *ProductService) CreateProduct(product model.Product) (*model.ResponseBodyProduct, error){
+func (s *ProductService) CreateProduct(product model.Product) (*model.ResponseBodyProduct, error) {
 	allProducts, err := repository.LoadProducts()
 	if err != nil {
 		return nil, err
@@ -69,7 +67,7 @@ func (s *ProductService) CreateProduct(product model.Product) (*model.ResponseBo
 	res := model.ResponseBodyProduct{
 		Message: "New product created!",
 		Product: &product,
-		Error: false,
+		Error:   false,
 	}
 	return &res, nil
 }

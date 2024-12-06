@@ -76,7 +76,7 @@ func (h *ProductHandler) HandlerProducts(w http.ResponseWriter, r *http.Request)
 	w.WriteHeader(http.StatusOK)
 	var msg string
 	for _, p := range products {
-		msg += fmt.Sprint("id: ", p.Id, " - ", p.Name, " - $", p.Price, " - $", p.Quantity, "\n")
+		msg += fmt.Sprint("id: ", p.Id, " - ", p.Name, " - $", p.Price, " - ", p.Quantity, "\n")
 	}
 	w.Write([]byte(msg))
 }
@@ -97,7 +97,7 @@ func (h *ProductHandler) HandlerProductById(w http.ResponseWriter, r *http.Reque
 	}
 	w.WriteHeader(http.StatusOK)
 	var msg string
-	msg += fmt.Sprint("id ", id, " - ", p.Name, " - $", p.Price, " - $", p.Quantity, "\n")
+	msg += fmt.Sprint("id ", id, " - ", p.Name, " - $", p.Price, " - ", p.Quantity, "\n")
 	w.Write([]byte(msg))
 }
 
@@ -125,7 +125,7 @@ func (h *ProductHandler) HandlerProductSearch(w http.ResponseWriter, r *http.Req
 	w.WriteHeader(http.StatusOK)
 	var msg string
 	for _, p := range products {
-		msg += fmt.Sprint("id: ", p.Id , " - ", p.Name, " - $", p.Price, " - $", p.Quantity, "\n")
+		msg += fmt.Sprint("id: ", p.Id , " - ", p.Name, " - $", p.Price, " - ", p.Quantity, "\n")
 	}
 	w.Write([]byte(msg))
 }
