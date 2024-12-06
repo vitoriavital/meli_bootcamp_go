@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"go-web/internal/model"
-	"go-web/internal/repository"
 	"go-web/internal/service"
-	"go-web/pkg/validations"
 	"github.com/go-chi/chi/v5"
 	"strconv"
 )
@@ -31,19 +29,9 @@ func (h *ProductHandler) HandlerCreateProduct(w http.ResponseWriter, r *http.Req
 	w.Header().Add("Content-Type", "application/json")
 	var requestBody model.RequestBodyProduct
 	err := json.NewDecoder(r.Body).Decode(&requestBody)
-	validProduct := validations.ValidateNewProduct(requestBody)
-	products, pErr := repository.LoadProducts()
-	if err != nil || validProduct != nil || pErr != nil {
+	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		if err != nil {
-			fmt.Println(err)
-		}
-		if validProduct != nil {
-			fmt.Println(validProduct)
-		}
-		if pErr != nil {
-			fmt.Println(pErr)
-		}
+		fmt.Println(err)
 		responseBody := model.ResponseBodyProduct{
 			Message:	"Couldn't Create product!",
 			Product: nil,
@@ -53,7 +41,6 @@ func (h *ProductHandler) HandlerCreateProduct(w http.ResponseWriter, r *http.Req
 		return
 	}
 	newProduct := model.Product{
-		Id: 			len(products) + 1,
 		Name:			requestBody.Name,
 		Quantity:		requestBody.Quantity,
 		CodeValue:		requestBody.CodeValue,
@@ -61,17 +48,13 @@ func (h *ProductHandler) HandlerCreateProduct(w http.ResponseWriter, r *http.Req
 		Expiration:		requestBody.Expiration,
 		Price:			requestBody.Price,
 	}
-	res := model.ResponseBodyProduct{
-		Message: "New product created!",
-		Product: &newProduct,
-		Error: false,
-	}
-	err = repository.SaveProducts(append(products, newProduct))
+
+	res, err := h.Service.CreateProduct(newProduct)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Println(err)
 		responseBody := model.ResponseBodyProduct{
-			Message:	"Couldn't save product!",
+			Message:	"Couldn't Create product!",
 			Product: nil,
 			Error: true,
 		}
@@ -84,7 +67,7 @@ func (h *ProductHandler) HandlerCreateProduct(w http.ResponseWriter, r *http.Req
 
 func (h *ProductHandler) HandlerProducts(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
-	products, err := repository.LoadProducts()
+	products, err := h.Service.GetAllProducts()
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Println(err)
@@ -101,19 +84,18 @@ func (h *ProductHandler) HandlerProducts(w http.ResponseWriter, r *http.Request)
 func (h *ProductHandler) HandlerProductById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
 	id := chi.URLParam(r, "id")
-	products,err := repository.LoadProducts()
+	nId, err := strconv.Atoi(id)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	p, err := h.Service.GetProductById(nId)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Println(err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	nId, err := strconv.Atoi(id)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	p := products[nId - 1]
 	var msg string
 	msg += fmt.Sprint("id ", id, " - ", p.Name, " - $", p.Price, " - $", p.Quantity, "\n")
 	w.Write([]byte(msg))
@@ -134,21 +116,15 @@ func (h *ProductHandler) HandlerProductSearch(w http.ResponseWriter, r *http.Req
 		fmt.Println(err)
 		return
 	}
-	products,err := repository.LoadProducts()
+	products,err := h.Service.GetProductsByPrice(priceGt)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Println(err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	var allProducts []model.Product
-	for _, product := range products {
-		if product.Price >= priceGt {
-			allProducts = append(allProducts, product)
-		}
-	}
 	var msg string
-	for _, p := range allProducts {
+	for _, p := range products {
 		msg += fmt.Sprint("id: ", p.Id , " - ", p.Name, " - $", p.Price, " - $", p.Quantity, "\n")
 	}
 	w.Write([]byte(msg))

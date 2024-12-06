@@ -22,7 +22,7 @@ func ValidateCodeValue(codeValue string) bool {
 	return true
 }
 
-func daysInMonth(m int, y int, d int) error {
+func ValidDaysInMonth(m int, y int, d int) error {
 	var validDay int
 	switch m {
     case 2:
@@ -62,14 +62,14 @@ func ValidateExpiration(expiration string) error {
 	if len(fields[2]) != 4 || y < 1 {
 		return errors.New("Error: Invalid Year")
 	}
-	err = daysInMonth(m, y, d)
+	err = ValidDaysInMonth(m, y, d)
 	if err != nil {
 		return errors.New("Error: Invalid Day")
 	}
 	return nil
 }
 
-func ValidateNewProduct(requestBody model.RequestBodyProduct) error {
+func ValidateNewProduct(requestBody model.Product) error {
 	validCode := ValidateCodeValue(requestBody.CodeValue)
 	if validCode == false {
 		return errors.New("Error: Invalid code value")
