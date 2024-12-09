@@ -13,19 +13,14 @@ func (h *ProductHandler) HandlerCreateProduct(w http.ResponseWriter, r *http.Req
 	token := r.Header.Get("API_TOKEN")
     if token != os.Getenv("API_TOKEN") {
 		e := errors.ErrUnauthorized
-		e.WriteResponse(w, nil)
+		e.WriteResponse(w)
         return
     }
 	var requestBody model.RequestBodyProduct
 	err := json.NewDecoder(r.Body).Decode(&requestBody)
 	if err != nil {
 		e := errors.ErrCreateProductFailure
-		responseBody := model.ResponseBodyProduct{
-			Message:	e.Message,
-			Product: nil,
-			Error: true,
-		}
-		e.WriteResponse(w, responseBody)
+		e.WriteResponse(w)
 		return
 	}
 	newProduct := model.Product{
@@ -40,12 +35,7 @@ func (h *ProductHandler) HandlerCreateProduct(w http.ResponseWriter, r *http.Req
 	res, err := h.Service.CreateProduct(newProduct)
 	if err != nil {
 		e := errors.ErrCreateProductFailure
-		responseBody := model.ResponseBodyProduct{
-			Message:	e.Message,
-			Product: nil,
-			Error: true,
-		}
-		e.WriteResponse(w, responseBody)
+		e.WriteResponse(w)
 		return
 	}
 	w.WriteHeader(http.StatusCreated)

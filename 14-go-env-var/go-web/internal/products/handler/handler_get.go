@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"net/http"
 	"fmt"
-	"github.com/go-chi/chi/v5"
 	"go-web/pkg/errors"
+	"net/http"
 	"strconv"
+	"github.com/go-chi/chi/v5"
 )
 
 func (h *ProductHandler) HandlerProducts(w http.ResponseWriter, r *http.Request) {
@@ -13,7 +13,7 @@ func (h *ProductHandler) HandlerProducts(w http.ResponseWriter, r *http.Request)
 	products, err := h.Service.GetAllProducts()
 	if err != nil {
 		e := errors.ErrUnauthorized
-		e.WriteResponse(w, nil)
+		e.WriteResponse(w)
         return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -36,7 +36,7 @@ func (h *ProductHandler) HandlerProductById(w http.ResponseWriter, r *http.Reque
 	p, err := h.Service.GetProductById(nId)
 	if err != nil || p == nil {
 		e := errors.ErrProductNotFound
-		e.WriteResponse(w, nil)
+		e.WriteResponse(w)
         return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -50,19 +50,19 @@ func (h *ProductHandler) HandlerProductSearch(w http.ResponseWriter, r *http.Req
 	price := r.URL.Query().Get("priceGt")
 	if price == "" {
 		e := errors.CreateError(http.StatusBadRequest, "missing priceGt")
-        e.WriteResponse(w, nil)
+        e.WriteResponse(w)
         return
 	}
 	priceGt, err := strconv.ParseFloat(price, 64)
 	if err != nil {
 		e := errors.CreateError(http.StatusBadRequest, "not a valid value for priceGt")
-        e.WriteResponse(w, nil)
+        e.WriteResponse(w)
         return
 	}
 	products,err := h.Service.GetProductsByPrice(priceGt)
 	if err != nil {
 		e := errors.CreateError(http.StatusInternalServerError, "no products found for this priceGt")
-		e.WriteResponse(w, nil)
+		e.WriteResponse(w)
         return
 	}
 	w.WriteHeader(http.StatusOK)

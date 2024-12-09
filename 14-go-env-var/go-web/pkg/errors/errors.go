@@ -28,13 +28,13 @@ func CreateError(status int, msg string) CustomError {
 	}
 }
 
-func (e *CustomError) WriteResponse(w http.ResponseWriter, resBody interface{}) {
+func (e *CustomError) WriteResponse(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(e.Status)
 	err := json.NewEncoder(w).Encode(e)
-	if resBody != nil {
-		err = json.NewEncoder(w).Encode(resBody)
-	}
+	// if resBody != nil {
+	// 	err = json.NewEncoder(w).Encode(resBody)
+	// }
 	if err != nil {
 		http.Error(w, "Failed to encode error response", http.StatusInternalServerError)
 	}

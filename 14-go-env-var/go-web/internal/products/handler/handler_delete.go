@@ -15,52 +15,32 @@ func (h *ProductHandler) HandlerDeleteProduct(w http.ResponseWriter, r *http.Req
 	token := r.Header.Get("API_TOKEN")
     if token != os.Getenv("API_TOKEN") {
 		e := errors.ErrUnauthorized
-        e.WriteResponse(w, nil)
+        e.WriteResponse(w)
         return
     }
 	id := chi.URLParam(r, "id")
 	nId, err := strconv.Atoi(id)
 	if err != nil {
 		e :=  errors.CreateError(http.StatusBadRequest,  "impossible conversion of id to int")
-		responseBody := model.ResponseBodyProduct{
-			Message:	e.Message,
-			Product: 	nil,
-			Error: 		true,
-		}
-		e.WriteResponse(w, responseBody)
+		e.WriteResponse(w)
 		return
 	}
 	p, err := h.Service.GetProductById(nId)
 	if err != nil {
 		e := errors.ErrProductNotFound
-		responseBody := model.ResponseBodyProduct{
-			Message:	e.Message,
-			Product: 	nil,
-			Error: 		true,
-		}
-		e.WriteResponse(w, responseBody)
+		e.WriteResponse(w)
 		return
 	}
 	if p == nil {
 		e := errors.ErrProductNotFound
-		responseBody := model.ResponseBodyProduct{
-			Message:	e.Message,
-			Product: 	nil,
-			Error: 		true,
-		}
-		e.WriteResponse(w, responseBody)
+		e.WriteResponse(w)
 		return
 	}
 	var res *model.ResponseBodyProduct
 	res, err = h.Service.DeleteProduct(p.Id)
 	if err != nil {
 		e := errors.ErrDeleteProductFailure
-		responseBody := model.ResponseBodyProduct{
-			Message:	e.Message,
-			Product: nil,
-			Error: true,
-		}
-		e.WriteResponse(w, responseBody)
+		e.WriteResponse(w)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
