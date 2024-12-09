@@ -50,7 +50,7 @@ func TestCreateProduct(t *testing.T) {
 			"product":
 				{
 					"id": 3,
-					"name": "chocolate", 
+					"name": "chocolate",
 					"quantity": 10,
 					"code_value": "code943fg",
 					"is_published": true,
@@ -105,7 +105,7 @@ func TestCreateProduct(t *testing.T) {
 		r.Post("/products", productController.CreateProduct)
 
 		jsonProduct := `{
-			"name": "chocolate", 
+			"name": "chocolate",
 			"quantity": 10,
 			"code_value": "code943fg",
 			"is_published": true,
@@ -129,4 +129,4 @@ func TestCreateProduct(t *testing.T) {
 		require.JSONEq(t, expectedBody, res.Body.String(), "response body mismatch")
 		require.Equal(t, expectedHeader, res.Header())
 	})
-}	
+}

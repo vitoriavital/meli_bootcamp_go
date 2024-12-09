@@ -41,7 +41,7 @@ func (c *ProductController) CreateProduct(w http.ResponseWriter, r *http.Request
 	res := ResponseBodyProduct{
 		Message: "new product created",
 		Product: p,
-		Error: false, 
+		Error: false,
 	}
 	WriteResponse(w, res, http.StatusCreated)
 }

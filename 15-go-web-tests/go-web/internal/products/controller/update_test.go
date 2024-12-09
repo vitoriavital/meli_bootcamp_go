@@ -48,7 +48,7 @@ func TestUpdateProduct(t *testing.T) {
 			"product":
 				{
 					"id": 3,
-					"name": "strawberry", 
+					"name": "strawberry",
 					"quantity": 10,
 					"code_value": "123",
 					"is_published": true,
@@ -71,7 +71,7 @@ func TestUpdateProduct(t *testing.T) {
 		r.Put("/products/{id}", productController.UpdateProduct)
 
 		jsonProduct := `{
-			"name": "strawberry", 
+			"name": "strawberry",
 			"quantity": 10,
 			"code_value": "code943fg",
 			"is_published": true,
@@ -104,7 +104,7 @@ func TestUpdateProduct(t *testing.T) {
 		r.Put("/products/{id}", productController.UpdateProduct)
 
 		jsonProduct := `{
-			"name": "chocolate", 
+			"name": "chocolate",
 			"quantity": 10,
 			"code_value": "code943fg",
 			"is_published": true,
@@ -135,7 +135,7 @@ func TestUpdateProduct(t *testing.T) {
 		r := chi.NewRouter()
 		r.Put("/products/{id}", productController.UpdateProduct)
 		jsonProduct := `{
-			"name": "chocolate", 
+			"name": "chocolate",
 			"quantity": 10,
 			"code_value": "code943fg",
 			"is_published": true,
@@ -159,7 +159,7 @@ func TestUpdateProduct(t *testing.T) {
 		require.JSONEq(t, expectedBody, res.Body.String(), "response body mismatch")
 		require.Equal(t, expectedHeader, res.Header())
 	})
-}	
+}
 
 
 func TestPatchProduct(t *testing.T) {
@@ -192,7 +192,7 @@ func TestPatchProduct(t *testing.T) {
 			"product":
 				{
 					"id": 3,
-					"name": "strawberry", 
+					"name": "strawberry",
 					"quantity": 10,
 					"code_value": "some_code",
 					"is_published": true,
@@ -242,7 +242,7 @@ func TestPatchProduct(t *testing.T) {
 		r.Patch("/products/{id}", productController.UpdateProduct)
 
 		jsonProduct := `{
-			"name": "chocolate", 
+			"name": "chocolate",
 			"quantity": 10,
 			"code_value": "code943fg",
 			"is_published": true,
@@ -273,7 +273,7 @@ func TestPatchProduct(t *testing.T) {
 		r := chi.NewRouter()
 		r.Patch("/products/{id}", productController.UpdateProduct)
 		jsonProduct := `{
-			"name": "chocolate", 
+			"name": "chocolate",
 			"quantity": 10,
 			"code_value": "code943fg",
 			"is_published": true,
@@ -297,4 +297,4 @@ func TestPatchProduct(t *testing.T) {
 		require.JSONEq(t, expectedBody, res.Body.String(), "response body mismatch")
 		require.Equal(t, expectedHeader, res.Header())
 	})
-}	
+}

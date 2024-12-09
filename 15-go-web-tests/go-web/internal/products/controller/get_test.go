@@ -221,4 +221,4 @@ func TestSearchProduct(t *testing.T) {
 		require.JSONEq(t, expectedBody, res.Body.String(), "response body mismatch")
 		require.Equal(t, expectedHeader, res.Header())
 	})
-}	
+}

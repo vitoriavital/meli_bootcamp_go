@@ -27,7 +27,7 @@ func (r *ProductRepository)LoadProducts() (map[int]model.Product, error) {
     if err != nil {
         return nil, err
     }
-    
+
     products := make(map[int]model.Product)
     for _, p := range result {
         products[p.Id] = p

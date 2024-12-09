@@ -42,7 +42,7 @@ func (c *ProductController) DeleteProduct(w http.ResponseWriter, r *http.Request
 	}
 	res := ResponseBodyProduct{
 		Message: "product deleted",
-		Product: nil, 
+		Product: nil,
 		Error: false,
 	}
 	WriteResponse(w, res, http.StatusOK)
