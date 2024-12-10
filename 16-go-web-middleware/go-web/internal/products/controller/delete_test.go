@@ -7,7 +7,6 @@ import (
 	"net/http/httptest"
 	"net/http"
 	"testing"
-	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/require"
 )
 
@@ -17,14 +16,11 @@ func TestDeleteProduct(t *testing.T) {
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
 
-		r := chi.NewRouter()
-		r.Delete("/products/{id}", productController.DeleteProduct)
-
 		req := httptest.NewRequest("DELETE", "/products/3", nil)
 
 		res := httptest.NewRecorder()
 
-		r.ServeHTTP(res, req)
+		productController.DeleteProduct(res, req)
 		expectedCode := http.StatusOK
 		expectedBody := `
 		{
@@ -41,14 +37,11 @@ func TestDeleteProduct(t *testing.T) {
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
 
-		r := chi.NewRouter()
-		r.Delete("/products/{id}", productController.DeleteProduct)
-
 		req := httptest.NewRequest("DELETE", "/products/ok", nil)
 
 		res := httptest.NewRecorder()
 
-		r.ServeHTTP(res, req)
+		productController.DeleteProduct(res, req)
 		expectedCode := http.StatusBadRequest
 		expectedBody := `
 		{
@@ -65,14 +58,11 @@ func TestDeleteProduct(t *testing.T) {
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
 
-		r := chi.NewRouter()
-		r.Delete("/products/{id}", productController.DeleteProduct)
-
 		req := httptest.NewRequest("DELETE", "/products/10", nil)
 
 		res := httptest.NewRecorder()
 
-		r.ServeHTTP(res, req)
+		productController.DeleteProduct(res, req)
 		expectedCode := http.StatusNotFound
 		expectedBody := `
 		{

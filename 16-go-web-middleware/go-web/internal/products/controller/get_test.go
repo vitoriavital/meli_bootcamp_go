@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/require"
 )
 
@@ -17,13 +16,10 @@ func TestGetAllProducts(t *testing.T) {
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
 
-		r := chi.NewRouter()
-		r.Get("/products", productController.GetAllProducts)
-
 		req := httptest.NewRequest("GET", "/products", nil)
 		res := httptest.NewRecorder()
 
-		r.ServeHTTP(res, req)
+		productController.GetAllProducts(res, req)
 		expectedCode := http.StatusOK
 		expectedBody := `
 		{
@@ -64,13 +60,10 @@ func TestGetProductById(t *testing.T) {
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
 
-		r := chi.NewRouter()
-		r.Get("/products/{id}", productController.GetProductById)
-
 		req := httptest.NewRequest("GET", "/products/95", nil)
 		res := httptest.NewRecorder()
 
-		r.ServeHTTP(res, req)
+		productController.GetProductById(res, req)
 		expectedCode := http.StatusOK
 		expectedBody := `
 		{
@@ -97,13 +90,10 @@ func TestGetProductById(t *testing.T) {
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
 
-		r := chi.NewRouter()
-		r.Get("/products/{id}", productController.GetProductById)
-
 		req := httptest.NewRequest("GET", "/products/ok", nil)
 		res := httptest.NewRecorder()
 
-		r.ServeHTTP(res, req)
+		productController.GetProductById(res, req)
 		expectedCode := http.StatusBadRequest
 		expectedBody := `
 		{
@@ -120,13 +110,10 @@ func TestGetProductById(t *testing.T) {
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
 
-		r := chi.NewRouter()
-		r.Get("/products/{id}", productController.GetProductById)
-
 		req := httptest.NewRequest("GET", "/products/10", nil)
 		res := httptest.NewRecorder()
 
-		r.ServeHTTP(res, req)
+		productController.GetProductById(res, req)
 		expectedCode := http.StatusNotFound
 		expectedBody := `
 		{
@@ -146,13 +133,10 @@ func TestSearchProduct(t *testing.T) {
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
 
-		r := chi.NewRouter()
-		r.Get("/products/search", productController.SearchProduct)
-
 		req := httptest.NewRequest("GET", "/products/search?priceGt=990", nil)
 		res := httptest.NewRecorder()
 
-		r.ServeHTTP(res, req)
+		productController.SearchProduct(res, req)
 		expectedCode := http.StatusOK
 		expectedBody := `
 		{
@@ -180,13 +164,10 @@ func TestSearchProduct(t *testing.T) {
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
 
-		r := chi.NewRouter()
-		r.Get("/products/search", productController.SearchProduct)
-
 		req := httptest.NewRequest("GET", "/products/search", nil)
 		res := httptest.NewRecorder()
 
-		r.ServeHTTP(res, req)
+		productController.SearchProduct(res, req)
 		expectedCode := http.StatusBadRequest
 		expectedBody := `
 		{
@@ -203,13 +184,10 @@ func TestSearchProduct(t *testing.T) {
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
 
-		r := chi.NewRouter()
-		r.Get("/products/search", productController.SearchProduct)
-
 		req := httptest.NewRequest("GET", "/products/search?priceGt=1000", nil)
 		res := httptest.NewRecorder()
 
-		r.ServeHTTP(res, req)
+		productController.SearchProduct(res, req)
 		expectedCode := http.StatusInternalServerError
 		expectedBody := `
 		{
