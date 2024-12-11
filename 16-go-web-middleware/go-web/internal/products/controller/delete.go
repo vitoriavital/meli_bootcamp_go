@@ -5,17 +5,16 @@ import (
 	"github.com/go-chi/chi/v5"
 	pkgErr "go-web/pkg/error"
 	"strconv"
-	"os"
 )
 
 func (c *ProductController) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
-	token := r.Header.Get("API_TOKEN")
-    if token != os.Getenv("API_TOKEN") {
-		e := pkgErr.ErrUnauthorized
-        WriteErrorResponse(w, e)
-        return
-    }
+	// token := r.Header.Get("API_TOKEN")
+    // if token != os.Getenv("API_TOKEN") {
+	// 	e := pkgErr.ErrUnauthorized
+    //     WriteErrorResponse(w, e)
+    //     return
+    // }
 	id := chi.URLParam(r, "id")
 	nId, err := strconv.Atoi(id)
 	if err != nil {

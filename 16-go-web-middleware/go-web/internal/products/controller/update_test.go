@@ -5,12 +5,14 @@ import (
 	"go-web/internal/products/controller"
 	"go-web/internal/products/repository"
 	"go-web/internal/products/service"
+	"go-web/internal/products/middleware"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/require"
 	"log"
+	"github.com/go-chi/chi/v5"
 )
 
 func TestUpdateProduct(t *testing.T) {
@@ -23,6 +25,10 @@ func TestUpdateProduct(t *testing.T) {
 		repo := repository.NewProductRepository("../../../docs/db/products_test.json")
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
+
+		r := chi.NewRouter()
+		r.Use(middleware.Auth)
+		r.Put("/products/{id}", productController.UpdateProduct)
 
 		jsonProduct := `{
 			"name": "strawberry",
@@ -37,7 +43,7 @@ func TestUpdateProduct(t *testing.T) {
 		req.Header.Set("API_TOKEN", "super-secure-key")
 		res := httptest.NewRecorder()
 
-		productController.UpdateProduct(res, req)
+		r.ServeHTTP(res, req)
 		expectedCode := http.StatusOK
 		expectedBody := `
 		{
@@ -63,6 +69,9 @@ func TestUpdateProduct(t *testing.T) {
 		repo := repository.NewProductRepository("../../../docs/db/products_test.json")
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
+		r := chi.NewRouter()
+		r.Use(middleware.Auth)
+		r.Put("/products/{id}", productController.UpdateProduct)
 
 		jsonProduct := `{
 			"name": "strawberry",
@@ -77,7 +86,7 @@ func TestUpdateProduct(t *testing.T) {
 		req.Header.Set("API_TOKEN", "super-secure-key")
 		res := httptest.NewRecorder()
 
-		productController.UpdateProduct(res, req)
+		r.ServeHTTP(res, req)
 		expectedCode := http.StatusBadRequest
 		expectedBody := `
 		{
@@ -94,6 +103,9 @@ func TestUpdateProduct(t *testing.T) {
 		repo := repository.NewProductRepository("../../../docs/db/products_test.json")
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
+		r := chi.NewRouter()
+		r.Use(middleware.Auth)
+		r.Put("/products/{id}", productController.UpdateProduct)
 		jsonProduct := `{
 			"name": "chocolate",
 			"quantity": 10,
@@ -107,7 +119,7 @@ func TestUpdateProduct(t *testing.T) {
 		req.Header.Set("API_TOKEN", "super-secure-key")
 		res := httptest.NewRecorder()
 
-		productController.UpdateProduct(res, req)
+		r.ServeHTTP(res, req)
 		expectedCode := http.StatusNotFound
 		expectedBody := `
 		{
@@ -123,7 +135,10 @@ func TestUpdateProduct(t *testing.T) {
 		repo := repository.NewProductRepository("../../../docs/db/products_test.json")
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
-
+		r := chi.NewRouter()
+		r.Use(middleware.Auth)
+		r.Put("/products/{id}", productController.UpdateProduct)
+		
 		jsonProduct := `{
 			"name": "chocolate",
 			"quantity": 10,
@@ -137,7 +152,7 @@ func TestUpdateProduct(t *testing.T) {
 		req.Header.Set("API_TOKEN", "wrong-key")
 		res := httptest.NewRecorder()
 
-		productController.UpdateProduct(res, req)
+		r.ServeHTTP(res, req)
 		expectedCode := http.StatusUnauthorized
 		expectedBody := `
 		{
@@ -162,7 +177,10 @@ func TestPatchProduct(t *testing.T) {
 		repo := repository.NewProductRepository("../../../docs/db/products_test.json")
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
-
+		r := chi.NewRouter()
+		r.Use(middleware.Auth)
+		r.Patch("/products/{id}", productController.PatchProduct)
+		
 		jsonProduct := `{
 			"code_value": "some_code"
 		}`
@@ -171,7 +189,7 @@ func TestPatchProduct(t *testing.T) {
 		req.Header.Set("API_TOKEN", "super-secure-key")
 		res := httptest.NewRecorder()
 
-		productController.PatchProduct(res, req)
+		r.ServeHTTP(res, req)
 		expectedCode := http.StatusOK
 		expectedBody := `
 		{
@@ -197,7 +215,10 @@ func TestPatchProduct(t *testing.T) {
 		repo := repository.NewProductRepository("../../../docs/db/products_test.json")
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
-
+		r := chi.NewRouter()
+		r.Use(middleware.Auth)
+		r.Patch("/products/{id}", productController.PatchProduct)
+		
 		jsonProduct := `{
 			"code_value": "S93304S"
 		}`
@@ -206,7 +227,7 @@ func TestPatchProduct(t *testing.T) {
 		req.Header.Set("API_TOKEN", "super-secure-key")
 		res := httptest.NewRecorder()
 
-		productController.PatchProduct(res, req)
+		r.ServeHTTP(res, req)
 		expectedCode := http.StatusBadRequest
 		expectedBody := `
 		{
@@ -222,6 +243,10 @@ func TestPatchProduct(t *testing.T) {
 		repo := repository.NewProductRepository("../../../docs/db/products_test.json")
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
+		r := chi.NewRouter()
+		r.Use(middleware.Auth)
+		r.Patch("/products/{id}", productController.PatchProduct)
+		
 		jsonProduct := `{
 			"name": "chocolate",
 			"quantity": 10,
@@ -235,7 +260,7 @@ func TestPatchProduct(t *testing.T) {
 		req.Header.Set("API_TOKEN", "super-secure-key")
 		res := httptest.NewRecorder()
 
-		productController.PatchProduct(res, req)
+		r.ServeHTTP(res, req)
 		expectedCode := http.StatusNotFound
 		expectedBody := `
 		{
@@ -251,6 +276,10 @@ func TestPatchProduct(t *testing.T) {
 		repo := repository.NewProductRepository("../../../docs/db/products_test.json")
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
+		r := chi.NewRouter()
+		r.Use(middleware.Auth)
+		r.Patch("/products/{id}", productController.PatchProduct)
+		
 		jsonProduct := `{
 			"name": "chocolate",
 			"quantity": 10,
@@ -264,7 +293,7 @@ func TestPatchProduct(t *testing.T) {
 		req.Header.Set("API_TOKEN", "wrong-key")
 		res := httptest.NewRecorder()
 
-		productController.PatchProduct(res, req)
+		r.ServeHTTP(res, req)
 		expectedCode := http.StatusUnauthorized
 		expectedBody := `
 		{

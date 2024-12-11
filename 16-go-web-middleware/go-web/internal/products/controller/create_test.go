@@ -5,28 +5,24 @@ import (
 	"go-web/internal/products/controller"
 	"go-web/internal/products/repository"
 	"go-web/internal/products/service"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/require"
+	"go-web/internal/products/middleware"
 )
 
 func TestCreateProduct(t *testing.T) {
-	err := godotenv.Load("API_TOKEN")
-	if err != nil {
-		log.Println("Failed to load token from .env file")
-	}
 	t.Run("success to create new product", func(t *testing.T) {
 		repo := repository.NewProductRepository("../../../docs/db/products_test.json")
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
 
 		r := chi.NewRouter()
+		r.Use(middleware.Auth)
 		r.Post("/products", productController.CreateProduct)
 
 		jsonProduct := `{
@@ -39,7 +35,8 @@ func TestCreateProduct(t *testing.T) {
 		}`
 
 		req := httptest.NewRequest("POST", "/products", bytes.NewReader([]byte(jsonProduct)))
-
+		req.Header.Set("API_TOKEN", "super-secure-key")
+		os.Setenv("API_TOKEN", "super-secure-key")
 		res := httptest.NewRecorder()
 
 		r.ServeHTTP(res, req)
@@ -70,6 +67,7 @@ func TestCreateProduct(t *testing.T) {
 		productController := controller.NewProductController(productService)
 
 		r := chi.NewRouter()
+		r.Use(middleware.Auth)
 		r.Post("/products", productController.CreateProduct)
 
 		jsonProduct := `{
@@ -81,7 +79,8 @@ func TestCreateProduct(t *testing.T) {
 		}`
 
 		req := httptest.NewRequest("POST", "/products", bytes.NewReader([]byte(jsonProduct)))
-
+		req.Header.Set("API_TOKEN", "super-secure-key")
+		os.Setenv("API_TOKEN", "super-secure-key")
 		res := httptest.NewRecorder()
 
 		r.ServeHTTP(res, req)
@@ -100,8 +99,8 @@ func TestCreateProduct(t *testing.T) {
 		repo := repository.NewProductRepository("../../../docs/db/products_test.json")
 		productService := service.NewProductService(repo)
 		productController := controller.NewProductController(productService)
-		os.Setenv("API_TOKEN", "123")
 		r := chi.NewRouter()
+		r.Use(middleware.Auth)
 		r.Post("/products", productController.CreateProduct)
 
 		jsonProduct := `{
@@ -114,7 +113,8 @@ func TestCreateProduct(t *testing.T) {
 		}`
 
 		req := httptest.NewRequest("POST", "/products", bytes.NewReader([]byte(jsonProduct)))
-
+		req.Header.Set("API_TOKEN", "wrong-key")
+		os.Setenv("API_TOKEN", "super-secure-key")
 		res := httptest.NewRecorder()
 
 		r.ServeHTTP(res, req)
