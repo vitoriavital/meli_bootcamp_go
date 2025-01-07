@@ -39,12 +39,11 @@ func (r *RepositoryProductStore) FindById(id int) (p internal.Product, err error
 }
 
 // Save saves a product.
-func (r *RepositoryProductStore) Save(p *internal.Product) (product *internal.Product, err error) {
+func (r *RepositoryProductStore) Save(p *internal.Product) (err error) {
 	var maxId int
-    
     err = r.db.QueryRow("SELECT IFNULL(MAX(id), 0) FROM products").Scan(&maxId)
     if err != nil {
-        return nil, fmt.Errorf("could not get max ID: %v", err)
+        return fmt.Errorf("could not get max ID: %v", err)
     }
 
     p.Id = maxId + 1
@@ -54,33 +53,31 @@ func (r *RepositoryProductStore) Save(p *internal.Product) (product *internal.Pr
 
     _, err = r.db.Exec(query, p.Id, p.Name, p.Quantity, p.CodeValue, p.IsPublished, p.Expiration, p.Price)
     if err != nil {
-        return nil, fmt.Errorf("could not create product: %v", err)
+        return fmt.Errorf("could not create product: %v", err)
     }
-	product = p
+
     return
 }
 
 // UpdateOrSave updates or saves a product.
-func (r *RepositoryProductStore) UpdateOrSave(p *internal.Product) (product *internal.Product, err error) {
+func (r *RepositoryProductStore) UpdateOrSave(p *internal.Product) (err error) {
 	if p.Id == 0 {
-		product, err = r.Save(p)
+		err = r.Save(p)
 	} else {
-		product, err = r.Update(p)
+		err = r.Update(p)
 	}
 
 	return
 }
 
 // Update updates a product.
-func (r *RepositoryProductStore) Update(p *internal.Product) (product *internal.Product, err error) {
+func (r *RepositoryProductStore) Update(p *internal.Product) (err error) {
 	query := `UPDATE products SET name = ?, quantity = ?, code_value = ?, is_published = ?, expiration = ?, price = ? WHERE id = ?`
 
 	_, err = r.db.Exec(query, p.Name, p.Quantity, p.CodeValue, p.IsPublished, p.Expiration, p.Price, p.Id)
 	if err != nil {
-		return nil, fmt.Errorf("could not execute update: %v", err)
+		return fmt.Errorf("could not execute update: %v", err)
 	}
-
-	product = p
 
 	return
 }

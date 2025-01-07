@@ -119,12 +119,11 @@ func (h *HandlerProduct) Create() http.HandlerFunc {
 				Price:       body.Price,
 			},
 		}
-		product, err := h.rp.Save(&p)
+		err = h.rp.Save(&p)
 		if err != nil {
 			response.JSON(w, http.StatusInternalServerError, "internal server error")
 			return
 		}
-		p = *product
 		// response
 		// - serialize product to JSON
 		data := ProductJSON{
@@ -180,12 +179,12 @@ func (h *HandlerProduct) UpdateOrCreate() http.HandlerFunc {
 				Price:       body.Price,
 			},
 		}
-		product, err := h.rp.UpdateOrSave(&p)
+		err = h.rp.UpdateOrSave(&p)
 		if err != nil {
 			response.JSON(w, http.StatusInternalServerError, "internal server error")
 			return
 		}
-		p = *product
+
 		// response
 		// - serialize product to JSON
 		data := ProductJSON{
@@ -254,12 +253,11 @@ func (h *HandlerProduct) Update() http.HandlerFunc {
 		p.IsPublished = body.IsPublished
 		p.Expiration = exp
 		p.Price = body.Price
-		product, err := h.rp.Update(&p)
+		err = h.rp.Update(&p)
 		if err != nil {
 			response.JSON(w, http.StatusInternalServerError, "internal server error")
 			return
 		}
-		p = *product
 		// response
 		// - serialize product to JSON
 		data := ProductJSON{

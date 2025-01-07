@@ -9,6 +9,8 @@ import (
 	"log"
 	"database/sql"
  	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/joho/godotenv/autoload"
+	"os"
 )
 // NewApplicationDefault creates a new default application.
 func NewApplicationDefault(addr string) (a *ApplicationDefault) {
@@ -18,7 +20,8 @@ func NewApplicationDefault(addr string) (a *ApplicationDefault) {
 	if addr != "" {
 		defaultAddr = addr
 	}
-	dataSource := "user:user@tcp(localhost:3306)/my_db?parseTime=true"
+	dataSource := os.Getenv("DB")
+	// dataSource := "user:user@tcp(localhost:3306)/my_db?parseTime=true"
 	storageDB, err := sql.Open("mysql", dataSource)
 	if err != nil {
 		log.Fatalf("%s", err.Error())
