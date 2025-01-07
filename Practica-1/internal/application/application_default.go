@@ -21,7 +21,6 @@ func NewApplicationDefault(addr string) (a *ApplicationDefault) {
 		defaultAddr = addr
 	}
 	dataSource := os.Getenv("DB")
-	// dataSource := "user:user@tcp(localhost:3306)/my_db?parseTime=true"
 	storageDB, err := sql.Open("mysql", dataSource)
 	if err != nil {
 		log.Fatalf("%s", err.Error())
